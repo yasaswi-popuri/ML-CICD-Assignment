@@ -15,6 +15,7 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  # CI Stage
   ci_stage:
     runs-on: ubuntu-latest
     steps:
@@ -39,8 +40,16 @@ jobs:
           ACC=$(cat accuracy.txt)
           sed -i "s/ACCURACY_PLACEHOLDER/$ACC/g" index.html
 
+      - name: Save Updated HTML as Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: updated-index
+          path: index.html
+
       - name: Execute Test Cases
         run: pytest test_model.py
+
+  # CD Stage
   cd_stage:
     needs: ci_stage
     runs-on: ubuntu-latest
@@ -50,6 +59,12 @@ jobs:
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
+
+      - name: Download Updated HTML Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: updated-index
+          path: .
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
