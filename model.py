@@ -2,7 +2,6 @@ from sklearn.datasets import load_iris
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
-
 def train_and_evaluate():
     data = load_iris()
     X, y = data.data, data.target
@@ -14,6 +13,8 @@ def train_and_evaluate():
     print(f"Model: Random Forest Classifier")
     print(f"Dataset: Iris")
     print(f"Model Accuracy: {acc:.4f}")
+    with open("accuracy.txt", "w") as f:
+        f.write(f"{acc * 100:.2f}% ({acc:.4f})")
     return acc
 if __name__ == "__main__":
     train_and_evaluate()
