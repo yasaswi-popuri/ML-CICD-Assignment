@@ -15,7 +15,6 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  # CI Stage
   ci_stage:
     runs-on: ubuntu-latest
     steps:
@@ -35,9 +34,13 @@ jobs:
       - name: Train and Run ML Program
         run: python model.py
 
+      - name: Update index.html with Actual Accuracy
+        run: |
+          ACC=$(cat accuracy.txt)
+          sed -i "s/ACCURACY_PLACEHOLDER/$ACC/g" index.html
+
       - name: Execute Test Cases
         run: pytest test_model.py
-
   cd_stage:
     needs: ci_stage
     runs-on: ubuntu-latest
